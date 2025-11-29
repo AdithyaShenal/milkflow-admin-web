@@ -11,7 +11,6 @@ const Layout = () => {
           <NavBar />
           <div className="p-4">
             <Outlet />
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eligendi
           </div>
         </div>
 
