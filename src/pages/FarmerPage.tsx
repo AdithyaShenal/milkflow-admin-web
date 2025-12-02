@@ -1,5 +1,9 @@
 const FarmerPage = () => {
-  return <div>FarmerPage</div>;
+  return (
+    <>
+      <p></p>
+    </>
+  );
 };
 
 export default FarmerPage;
