@@ -1,22 +1,18 @@
 import React, { useState } from "react";
+import type { Farmer } from "../../pages/FarmerPage";
 
-export type FarmerForm = {
-  name: string;
-  nic: string;
-  contact: string;
-  farmType: string;
-  capacity: string;
-  location: string;
-};
-
-interface ModalProps {
+interface AddFarmerModalProps {
   open: boolean;
   onClose: () => void;
-  onSave: (data: FarmerForm) => void;
+  onSave: (data: Omit<Farmer, "id">) => void;
 }
 
-export default function AddFarmerModal({ open, onClose, onSave }: ModalProps) {
-  const [formData, setFormData] = useState<FarmerForm>({
+export default function AddFarmerModal({
+  open,
+  onClose,
+  onSave,
+}: AddFarmerModalProps) {
+  const [form, setForm] = useState({
     name: "",
     nic: "",
     contact: "",
@@ -28,12 +24,13 @@ export default function AddFarmerModal({ open, onClose, onSave }: ModalProps) {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = () => {
-    onSave(formData);
-    setFormData({
+    onSave(form);
+    onClose();
+    setForm({
       name: "",
       nic: "",
       contact: "",
@@ -41,82 +38,78 @@ export default function AddFarmerModal({ open, onClose, onSave }: ModalProps) {
       capacity: "",
       location: "",
     });
-    onClose();
   };
 
+  if (!open) return null;
+
   return (
-    <>
-      {open && (
-        <dialog className="modal modal-open">
-          <div className="modal-box w-96 max-w-lg">
-            <h3 className="font-bold text-lg mb-4">Add Farmer</h3>
+    <dialog className="modal modal-open">
+      <div className="modal-box max-w-lg">
+        <h3 className="font-bold text-lg mb-4">Add New Farmer</h3>
 
-            {/* FORM */}
-            <div className="space-y-3">
-              <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                className="input input-bordered w-full"
-                onChange={handleChange}
-              />
+        <div className="grid gap-4">
+          <input
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            className="input input-bordered w-full"
+            placeholder="Full Name"
+          />
 
-              <input
-                type="text"
-                name="nic"
-                placeholder="NIC"
-                className="input input-bordered w-full"
-                onChange={handleChange}
-              />
+          <input
+            name="nic"
+            value={form.nic}
+            onChange={handleChange}
+            className="input input-bordered w-full"
+            placeholder="NIC Number"
+          />
 
-              <input
-                type="text"
-                name="contact"
-                placeholder="Contact Number"
-                className="input input-bordered w-full"
-                onChange={handleChange}
-              />
+          <input
+            name="contact"
+            value={form.contact}
+            onChange={handleChange}
+            className="input input-bordered w-full"
+            placeholder="Contact Number"
+          />
 
-              <select
-                name="farmType"
-                className="select select-bordered w-full"
-                onChange={handleChange}
-              >
-                <option value="">Select Farm Type</option>
-                <option value="Dairy Farm">Dairy Farm</option>
-                <option value="Organic Dairy">Organic Dairy</option>
-                <option value="Mixed Farm">Mixed Farm</option>
-              </select>
+          <select
+            name="farmType"
+            value={form.farmType}
+            onChange={handleChange}
+            className="select select-bordered w-full"
+          >
+            <option value="">Select Farm Type</option>
+            <option value="Dairy Farm">Dairy Farm</option>
+            <option value="Organic Dairy">Organic Dairy</option>
+            <option value="Mixed Farm">Mixed Farm</option>
+          </select>
 
-              <input
-                type="text"
-                name="capacity"
-                placeholder="Capacity (ex: 120L/day)"
-                className="input input-bordered w-full"
-                onChange={handleChange}
-              />
+          <input
+            name="capacity"
+            value={form.capacity}
+            onChange={handleChange}
+            className="input input-bordered w-full"
+            placeholder="Daily Capacity (L/day)"
+          />
 
-              <input
-                type="text"
-                name="location"
-                placeholder="Location"
-                className="input input-bordered w-full"
-                onChange={handleChange}
-              />
-            </div>
+          <input
+            name="location"
+            value={form.location}
+            onChange={handleChange}
+            className="input input-bordered w-full"
+            placeholder="Location"
+          />
+        </div>
 
-            {/* BUTTONS */}
-            <div className="modal-action">
-              <button className="btn" onClick={onClose}>
-                Cancel
-              </button>
-              <button className="btn btn-primary" onClick={handleSubmit}>
-                Save
-              </button>
-            </div>
-          </div>
-        </dialog>
-      )}
-    </>
+        <div className="modal-action">
+          <button className="btn" onClick={onClose}>
+            Cancel
+          </button>
+          <button className="btn btn-primary" onClick={handleSubmit}>
+            Save Farmer
+          </button>
+        </div>
+      </div>
+    </dialog>
   );
 }
