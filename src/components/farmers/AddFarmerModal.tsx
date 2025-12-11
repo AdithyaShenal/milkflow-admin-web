@@ -9,6 +9,7 @@ interface AddFarmerModalProps {
 
 export default function AddFarmerModal({
   open,
+  //closes modal when user clicks Cancel or after Submit.
   onClose,
   onSave,
 }: AddFarmerModalProps) {
