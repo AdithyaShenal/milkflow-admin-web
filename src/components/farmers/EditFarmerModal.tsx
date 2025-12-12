@@ -14,7 +14,7 @@ export default function EditFarmerModal({
   onClose,
   onUpdate,
 }: EditFarmerModalProps) {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<Omit<Farmer, "id">>({
     name: "",
     nic: "",
     contact: "",
@@ -23,17 +23,10 @@ export default function EditFarmerModal({
     location: "",
   });
 
-  // Prefill form when modal opens
   useEffect(() => {
     if (farmer) {
-      setForm({
-        name: farmer.name,
-        nic: farmer.nic,
-        contact: farmer.contact,
-        farmType: farmer.farmType,
-        capacity: farmer.capacity,
-        location: farmer.location,
-      });
+      const { id, ...rest } = farmer;
+      setForm(rest);
     }
   }, [farmer]);
 
@@ -61,52 +54,37 @@ export default function EditFarmerModal({
             name="name"
             value={form.name}
             onChange={handleChange}
-            className="input input-bordered w-full"
-            placeholder="Full Name"
+            className="input input-bordered"
           />
-
           <input
             name="nic"
             value={form.nic}
             onChange={handleChange}
-            className="input input-bordered w-full"
-            placeholder="NIC Number"
+            className="input input-bordered"
           />
-
           <input
             name="contact"
             value={form.contact}
             onChange={handleChange}
-            className="input input-bordered w-full"
-            placeholder="Contact Number"
+            className="input input-bordered"
           />
-
-          <select
+          <input
             name="farmType"
             value={form.farmType}
             onChange={handleChange}
-            className="select select-bordered w-full"
-          >
-            <option value="">Select Farm Type</option>
-            <option value="Dairy Farm">Dairy Farm</option>
-            <option value="Organic Dairy">Organic Dairy</option>
-            <option value="Mixed Farm">Mixed Farm</option>
-          </select>
-
+            className="input input-bordered"
+          />
           <input
             name="capacity"
             value={form.capacity}
             onChange={handleChange}
-            className="input input-bordered w-full"
-            placeholder="Daily Capacity (L/day)"
+            className="input input-bordered"
           />
-
           <input
             name="location"
             value={form.location}
             onChange={handleChange}
-            className="input input-bordered w-full"
-            placeholder="Location"
+            className="input input-bordered"
           />
         </div>
 
@@ -115,7 +93,7 @@ export default function EditFarmerModal({
             Cancel
           </button>
           <button className="btn btn-primary" onClick={handleSubmit}>
-            Update Farmer
+            Update
           </button>
         </div>
       </div>

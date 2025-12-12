@@ -49,7 +49,6 @@ export default function FarmerPage() {
 
   const handleUpdateFarmer = (updated: Farmer) => {
     setFarmers((prev) => prev.map((f) => (f.id === updated.id ? updated : f)));
-    setEditingFarmer(null);
   };
 
   const handleDeleteFarmer = () => {
@@ -93,12 +92,32 @@ export default function FarmerPage() {
         </button>
       </div>
 
-      <FarmerTable farmers={farmers} search={search} farmType={farmType} />
+      <FarmerTable
+        farmers={farmers}
+        search={search}
+        farmType={farmType}
+        onEdit={(f) => setEditingFarmer(f)}
+        onDelete={(f) => setDeletingFarmer(f)}
+      />
 
       <AddFarmerModal
         open={showModal}
         onClose={() => setShowModal(false)}
         onSave={handleAddFarmer}
+      />
+
+      <EditFarmerModal
+        open={!!editingFarmer}
+        farmer={editingFarmer}
+        onClose={() => setEditingFarmer(null)}
+        onUpdate={handleUpdateFarmer}
+      />
+
+      <DeleteFarmerModal
+        open={!!deletingFarmer}
+        farmerName={deletingFarmer?.name}
+        onClose={() => setDeletingFarmer(null)}
+        onConfirm={handleDeleteFarmer}
       />
     </div>
   );

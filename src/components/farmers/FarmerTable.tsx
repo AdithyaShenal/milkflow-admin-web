@@ -6,7 +6,7 @@ interface FarmerTableProps {
   search: string;
   farmType: string;
   onEdit: (farmer: Farmer) => void;
-  onDelete: (id: number) => void;
+  onDelete: (farmer: Farmer) => void;
 }
 
 export default function FarmerTable({
@@ -55,6 +55,7 @@ export default function FarmerTable({
 
               <td>
                 <div className="flex justify-end gap-3">
+                  {/* EDIT */}
                   <button
                     className="btn btn-ghost btn-sm text-primary"
                     onClick={() => onEdit(f)}
@@ -62,9 +63,10 @@ export default function FarmerTable({
                     <Edit3 size={18} />
                   </button>
 
+                  {/* DELETE */}
                   <button
                     className="btn btn-ghost btn-sm text-error"
-                    onClick={() => onDelete(f.id)}
+                    onClick={() => onDelete(f)}
                   >
                     <Trash2 size={18} />
                   </button>
