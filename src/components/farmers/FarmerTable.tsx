@@ -1,53 +1,22 @@
 import { MapPin, Edit3, Trash2 } from "lucide-react";
+import type { Farmer } from "../../pages/FarmerPage";
 
-type Farmer = {
-  id: number;
-  name: string;
-  nic: string;
-  contact: string;
-  farmType: string;
-  capacity: string;
-  location: string;
-};
-
-const farmerData: Farmer[] = [
-  {
-    id: 1,
-    name: "Sunil Perera",
-    nic: "892345678V",
-    contact: "+94 71 234 5678",
-    farmType: "Dairy Farm",
-    capacity: "125L/day",
-    location: "123 Main Road, Colombo",
-  },
-  {
-    id: 2,
-    name: "Kamala Silva",
-    nic: "912345678V",
-    contact: "+94 77 987 6543",
-    farmType: "Organic Dairy",
-    capacity: "98L/day",
-    location: "45 Temple Road, Kandy",
-  },
-  {
-    id: 3,
-    name: "Nimal Fernando",
-    nic: "852345678V",
-    contact: "+94 76 456 7890",
-    farmType: "Mixed Farm",
-    capacity: "156L/day",
-    location: "78 Lake View, Galle",
-  },
-];
-
-export default function FarmerTable({
-  search,
-  farmType,
-}: {
+interface FarmerTableProps {
+  farmers: Farmer[];
   search: string;
   farmType: string;
-}) {
-  const filtered = farmerData
+  onEdit: (farmer: Farmer) => void;
+  onDelete: (id: number) => void;
+}
+
+export default function FarmerTable({
+  farmers,
+  search,
+  farmType,
+  onEdit,
+  onDelete,
+}: FarmerTableProps) {
+  const filtered = farmers
     .filter(
       (f) =>
         f.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -86,10 +55,17 @@ export default function FarmerTable({
 
               <td>
                 <div className="flex justify-end gap-3">
-                  <button className="btn btn-ghost btn-sm text-primary">
+                  <button
+                    className="btn btn-ghost btn-sm text-primary"
+                    onClick={() => onEdit(f)}
+                  >
                     <Edit3 size={18} />
                   </button>
-                  <button className="btn btn-ghost btn-sm text-error">
+
+                  <button
+                    className="btn btn-ghost btn-sm text-error"
+                    onClick={() => onDelete(f.id)}
+                  >
                     <Trash2 size={18} />
                   </button>
                 </div>
