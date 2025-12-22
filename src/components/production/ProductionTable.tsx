@@ -25,7 +25,7 @@ const ProductionTable = ({
       <table className="table w-full">
         <thead>
           <tr className="text-sm text-gray-500">
-            <th>Farmer ID</th>
+    <th>Farmer ID</th>
             <th>Farmer Name</th>
             <th>Volume (L)</th>
             <th>Time Window</th>
@@ -45,16 +45,16 @@ const ProductionTable = ({
                     <td ><span className="text-success font-medium"></span></td>
                     <td className="text-right space-x-2">
                         <button
-                        className="btn btn-sm btn-outline"
-                        onClick={() => onMap(r)}
+                          className="btn btn-sm btn-outline"
+                          onClick={() => onMap(r)}
                         >
                         <MapPin size={14} />
                         Map
                         </button>
 
                         <button
-                        className="btn btn-sm btn-error"
-                        onClick={() => onBlock(r)}
+                          className="btn btn-sm btn-error"
+                          onClick={() => onBlock(r)}
                         >
                         Block
                         </button>
