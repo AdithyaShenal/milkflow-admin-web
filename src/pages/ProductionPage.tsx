@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
-import ProductionTable, {
-  ProductionRequest,
-} from "../components/production/ProductionTable";
+import ProductionTable from "../components/production/ProductionTable";
+import type { ProductionRequest } from "../components/production/ProductionTable";
 
 const initialRequests: ProductionRequest[] = [
   {
@@ -21,6 +20,38 @@ const initialRequests: ProductionRequest[] = [
     registeredAt: "2024-01-15 06:12",
     status: "Active",
   },
+  {
+    id: "F003",
+    farmerName: "Nimal Fernando",
+    volume: 156,
+    timeWindow: "06:30 - 08:30",
+    registeredAt: "2024-01-15 05:58",
+    status: "Active",
+  },
+  {
+    id: "F004",
+    farmerName: "Anura Wickrama",
+    volume: 87,
+    timeWindow: "08:00 - 10:00",
+    registeredAt: "2024-01-15 07:20",
+    status: "Active",
+  },
+  {
+    id: "F005",
+    farmerName: "Priya Jayasinghe",
+    volume: 210,
+    timeWindow: "05:30 - 07:30",
+    registeredAt: "2024-01-15 05:15",
+    status: "Active",
+  },
+  {
+    id: "F006",
+    farmerName: "Ravi Dissanayake",
+    volume: 142,
+    timeWindow: "07:30 - 09:30",
+    registeredAt: "2024-01-15 06:45",
+    status: "Active",
+  },
 ];
 const ProductionPage = () => {
   const [search, setSearch] = useState("");
@@ -31,12 +62,14 @@ const ProductionPage = () => {
 
   return (
     <div className="p-7 w-full">
-      -<h1 className="text-2xl font-semibold">Production Overview</h1>
+      <h1 className="text-2xl font-semibold">Production Overview</h1>
       <p className="text-gray-500 text-sm mb-6">
         Manage Pending collection requests
       </p>
       <div className="bg-base-100 rounded-xl shadow-md p-6">
-        <h2 className="text-lg font-semibold mb-4">Pending Requests (6)</h2>
+        <h2 className="text-lg font-semibold mb-4">
+          Pending Requests ({requests.length})
+        </h2>
         <div className="flex flex-wrap items-center gap-4 mb-6">
           <div className="relative w-full max-w-xl">
             <Search
