@@ -21,7 +21,7 @@
     "immer": "^11.1.0",
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",
-    "lucide-react": "^0.562.0",
+    "lucide-react": "^0.556.0",
     "mapbox-gl": "^3.16.0",
     "maplibre-gl": "^4.7.1",
     "maplibregl-mapbox-request-transformer": "^0.0.3",
