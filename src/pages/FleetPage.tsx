@@ -35,6 +35,17 @@ const FleetPage = () => {
   const [status, setStatus] = useState("");
   const [drivers] = useState<Driver[]>(initialDrivers);
 
+  const filteredDrivers = drivers.filter((d) => {
+    const matchName = search
+      ? d.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+      : true;
+    const matchStatus = status ? d.status === status : true;
+    const matchTruck = truck
+      ? d.truck.toLocaleLowerCase().includes(truck.toLocaleLowerCase())
+      : true;
+    return matchName && matchStatus && matchTruck;
+  });
+
   return (
     <div className="p-7 w-full">
       <h1 className="text-2xl font-semibold">Fleet Management</h1>
@@ -95,7 +106,7 @@ const FleetPage = () => {
 
         <div className="text-gray-400 text-sm">
           <DriverTable
-            drivers={drivers}
+            drivers={filteredDrivers}
             onEdit={(d) => console.log("Edit", d)}
             onDelete={(d) => console.log("Delete", d)}
           />
