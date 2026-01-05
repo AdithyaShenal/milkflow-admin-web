@@ -1,4 +1,6 @@
 import StatCard from "../components/home/StatCard";
+import DistanceBarChart from "../components/home/DistanceBarChart";
+import AvgLitersFarmerBarChart from "../components/home/AvgLitersFarmerBarChart";
 import { Droplets, Calendar, Truck, AlertCircle } from "lucide-react";
 const dashboardStats = {
   todayLiters: 1240,
