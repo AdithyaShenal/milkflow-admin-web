@@ -25,20 +25,17 @@ export default function StatCard({
   return (
     <div className="rounded-xl bg-base-100 border border-base-300/60 p-5 hover:border-base-300 transition">
       <div className="flex items-start justify-between">
-        {/* Left content */}
         <div>
           <p className="text-xs uppercase tracking-wide text-gray-500">
             {title}
           </p>
 
-          {/* Value or skeleton */}
           {loading ? (
             <div className="mt-3 h-6 w-24 rounded bg-base-300 animate-pulse" />
           ) : (
             <p className="mt-2 text-2xl font-semibold">{value}</p>
           )}
 
-          {/* Trend (optional) */}
           {trend && change && !loading && (
             <div className="mt-2 flex items-center gap-1 text-xs">
               {trend === "up" ? (
@@ -58,10 +55,7 @@ export default function StatCard({
           )}
         </div>
 
-        {/* Icon */}
-        <div className={`p-3 rounded-lg bg-base-200 text-gray-600 ${bgColor}`}>
-          {icon}
-        </div>
+        <div className={`p-3 rounded-lg text-gray-600 ${bgColor}`}>{icon}</div>
       </div>
     </div>
   );

@@ -1,16 +1,25 @@
 import StatCard from "../components/home/StatCard";
+import DashboardCard from "../components/home/DashboardCard";
+
+import LitersProductionsCombinedLine from "../components/home/LitersProductionsCombinedLine";
 import DistanceBarChart from "../components/home/DistanceBarChart";
 import AvgLitersFarmerBarChart from "../components/home/AvgLitersFarmerBarChart";
+import RoundedDoughnut from "../components/home/RoundedDoughnut";
+import TransactionsPanel from "../components/home/TransactionsPanel";
+
 import { Droplets, Calendar, Truck, AlertCircle } from "lucide-react";
+
 const dashboardStats = {
   todayLiters: 1240,
   monthlyLiters: 28500,
   avgPickups: 6.2,
   pendingLiters: 420,
 };
+
 const HomePage = () => {
   return (
-    <div className="p-6 space-y-8 bg-base-200/40 min-h-screen">
+    <div className="p-6 bg-base-200/40 min-h-screen space-y-6">
+      {/* HEADER */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
@@ -19,6 +28,8 @@ const HomePage = () => {
           </p>
         </div>
       </div>
+
+      {/* KPI CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         <StatCard
           title="Total liters collected today"
@@ -51,65 +62,56 @@ const HomePage = () => {
           bgColor="bg-orange-100"
         />
       </div>
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {/* Chart 1 */}
-        <div className="bg-white rounded-xl border p-5">
-          <h2 className="text-base font-semibold mb-4">Total liters per day</h2>
-          <LitersLineChart />
-        </div>
 
-        {/* Chart 2 */}
-        <div className="bg-white rounded-xl border p-5">
-          <h2 className="text-base font-semibold mb-4">
-            Distance covered per day (km)
-          </h2>
-          <DistanceBarChart />
-        </div>
+      {/* SaaS LAYOUT */}
+      <div className="grid grid-cols-12 gap-6">
+        {/* LEFT ANALYTICS */}
+        <div className="col-span-12 xl:col-span-9 space-y-6">
+          {/* MAIN COMBINED CHART */}
+          <DashboardCard
+            title="Total Liters & Productions"
+            subtitle="Last 7 days"
+            className="min-h-[360px]"
+          >
+            <LitersProductionsCombinedLine />
+          </DashboardCard>
 
-        {/* Chart 3 */}
-        <div className="bg-white rounded-xl border p-5">
-          <h2 className="text-base font-semibold mb-4">Production status</h2>
-          <ProductionDoughnutChart />
-        </div>
-      </div>
-      {/* 3rd ROW CHARTS */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        <div className="card bg-base-100 shadow-sm">
-          <div className="card-body p-4">
-            <h2 className="text-sm font-semibold text-gray-700 mb-2">
-              Total productions per day
-            </h2>
+          {/* SECOND ROW: Bar + Donut + Donut */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <DashboardCard title="Distance covered per day (km)">
+              <DistanceBarChart />
+            </DashboardCard>
 
-            <div className="h-52">
-              <ProductionsLineChart />
-            </div>
+            <DashboardCard title="Production status">
+              <RoundedDoughnut
+                items={[
+                  { label: "Completed", value: 85, color: "#3b82f6" },
+                  { label: "Failed", value: 15, color: "#ef4444" },
+                ]}
+              />
+            </DashboardCard>
+
+            <DashboardCard title="Vehicle utilization">
+              <RoundedDoughnut
+                items={[
+                  { label: "In Use", value: 70, color: "#22c55e" },
+                  { label: "Idle", value: 30, color: "#f97316" },
+                ]}
+              />
+            </DashboardCard>
           </div>
+
+          {/* THIRD ROW: Farmer chart */}
+          <DashboardCard title="Average liters per farmer">
+            <AvgLitersFarmerBarChart />
+          </DashboardCard>
         </div>
 
-        <div className="card bg-base-100 shadow-sm">
-          <div className="card-body p-4">
-            <h2 className="text-sm font-semibold text-gray-700 mb-2">
-              Average liters per farmer
-            </h2>
-
-            <div className="h-52">
-              {" "}
-              <AvgLitersFarmerBarChart />
-            </div>
-          </div>
-        </div>
-
-        <div className="card bg-base-100 shadow-sm">
-          <div className="card-body p-4">
-            <h2 className="text-sm font-semibold text-gray-700 mb-2">
-              Vehicle utilization
-            </h2>
-
-            <div className="h-52">
-              {" "}
-              <VehicleUtilizationChart />
-            </div>
-          </div>
+        {/* RIGHT PANEL */}
+        <div className="col-span-12 xl:col-span-3">
+          <DashboardCard title="Transactions" subtitle="Latest payments">
+            <TransactionsPanel />
+          </DashboardCard>
         </div>
       </div>
     </div>
