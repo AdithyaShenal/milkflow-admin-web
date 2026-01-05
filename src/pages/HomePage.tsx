@@ -52,7 +52,6 @@ const HomePage = () => {
           value={dashboardStats.avgPickups}
           icon={<Truck size={20} />}
           bgColor="bg-purple-100"
-          loading
         />
 
         <StatCard
