@@ -1,5 +1,6 @@
 import StatCard from "../components/home/StatCard";
 import LitersLineChart from "../components/home/LitersLineChart";
+import DistanceBarChart from "../components/home/DistanceBarChart";
 
 import { Droplets, Calendar, Truck, AlertCircle } from "lucide-react";
 const dashboardStats = {
@@ -60,6 +61,7 @@ const HomePage = () => {
           <h2 className="text-base font-semibold mb-4">
             Distance covered per day (km)
           </h2>
+          <DistanceBarChart />
         </div>
 
         {/* Chart 3 */}
