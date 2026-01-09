@@ -14,7 +14,8 @@ const MapComponent = ({ route }: Props) => {
 
     const depotLocation = route.stops[0].production
       ? route.stops[0].production.farmer.location
-      : { lat: 7.019041, lon: 79.969565 };
+      : { lat: 5.959464, lon: 80.545205 };
+    // { lat: 7.019041, lon: 79.969565 };
 
     return route.stops.map((stop) => {
       if (!stop.production) {
