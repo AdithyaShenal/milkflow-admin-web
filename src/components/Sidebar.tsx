@@ -1,6 +1,4 @@
 import { NavLink } from "react-router-dom";
-import { RiSettings3Line } from "react-icons/ri";
-import { MdOutlineManageHistory } from "react-icons/md";
 
 import {
   House,
@@ -11,6 +9,7 @@ import {
   Route,
   History,
   FileSliders,
+  SlidersHorizontal,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -82,6 +81,20 @@ const Sidebar = () => {
                 {/* Settings icon */}
                 <Waypoints className="my-1.5 inline-block size-4" />
                 <span className="is-drawer-close:hidden">Route Optimize</span>
+              </NavLink>
+            </li>
+
+            {/* List item */}
+            <li>
+              <NavLink
+                to="/optimizeSettings"
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+              >
+                {/* Settings icon */}
+                <SlidersHorizontal className="my-1.5 inline-block size-4" />
+                <span className="is-drawer-close:hidden">
+                  Optimize Settings
+                </span>
               </NavLink>
             </li>
 

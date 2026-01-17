@@ -5,8 +5,6 @@ import { useState } from "react";
 import RouteCardAdvance from "../components/map/RouteCardAdvance";
 import MiniDashboard from "../components/MiniDashboard";
 
-// import MapboxMap from "../components/MapBox/MapboxMap";
-
 interface Farmer {
   _id: string;
   address: string;
@@ -125,8 +123,10 @@ const RoutingPage = () => {
   return (
     <>
       <div className="flex flex-col gap-6">
+        <p className="font-semibold">Generate Optimized Routes</p>
+
         <MiniDashboard />
-        <div className="flex flex-wrap items-center gap-3 border border-slate-300 bg-slate-50 px-4 py-3 rounded-sm">
+        <div className="flex flex-wrap items-center gap-3 border border-base-300 bg-base-200 px-4 py-3 rounded-sm">
           <button className="btn btn-neutral btn-sm" onClick={() => refetch()}>
             {isFetching && (
               <span className="loading loading-spinner loading-xs" />
@@ -170,7 +170,7 @@ const RoutingPage = () => {
             {isPending && (
               <span className="loading loading-spinner loading-xs" />
             )}
-            Approve & Dispatch
+            Dispatch
           </button>
         </div>
 
@@ -218,14 +218,14 @@ const RoutingPage = () => {
         {/* === MAIN CONTENT === */}
         <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-4 h-[600px]">
           {/* Map */}
-          <div className="border border-slate-300 bg-white rounded-sm overflow-hidden">
+          <div className="border border-base-300 bg-base-200 rounded-sm overflow-hidden">
             <MapComponent route={mapRoute} />
           </div>
 
           {/* Routes Panel */}
           <div className="flex flex-col border border-slate-300 rounded-sm overflow-y-scroll">
             <div className="border-b border-slate-300 px-4 py-2">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-wide">
                 Generated Routes
               </p>
             </div>

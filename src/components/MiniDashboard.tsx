@@ -6,6 +6,8 @@ interface MiniDashboardProps {
   availableCapacity: number;
   autoResolvability: boolean;
   routeWiseResolvability: boolean;
+  autoClusterization: boolean;
+  routeWiseClusterization: boolean;
 }
 
 interface ApiError {
@@ -26,6 +28,8 @@ const MiniDashboard = () => {
         .get("http://localhost:4000/api/analytics/mini_dashboard")
         .then((res) => res.data),
   });
+
+  console.log(data);
 
   if (isError)
     return (
@@ -53,7 +57,7 @@ const MiniDashboard = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 border border-slate-300 rounded-sm p-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 rounded-sm">
         {[
           {
             label: "Total Production Volume",
@@ -68,12 +72,12 @@ const MiniDashboard = () => {
         ].map((item) => (
           <div
             key={item.label}
-            className="rounded-sm border border-slate-300 bg-slate-50 px-4 py-3"
+            className="rounded-sm border border-base-300 bg-base-200 px-4 py-3"
           >
             <p className="text-xs uppercase tracking-wide text-slate-600">
               {item.label}
             </p>
-            <p className="mt-2 text-2xl font-semibold text-slate-900">
+            <p className="mt-2 text-2xl font-semibold">
               {item.value}
               <span className="ml-1 text-sm font-normal text-slate-500">
                 {item.unit}
@@ -82,7 +86,7 @@ const MiniDashboard = () => {
           </div>
         ))}
 
-        <div className="rounded-sm border border-slate-300 bg-slate-50 px-4 py-3">
+        <div className="rounded-sm border border-base-300 bg-base-200 px-4 py-3">
           <p className="text-xs uppercase tracking-wide text-slate-600">
             Auto Resolvability
           </p>
@@ -101,7 +105,7 @@ const MiniDashboard = () => {
           )}
         </div>
 
-        <div className="rounded-sm border border-slate-300 bg-slate-50 px-4 py-3">
+        <div className="rounded-sm border border-base-300 bg-base-200 px-4 py-3">
           <p className="text-xs uppercase tracking-wide text-slate-600">
             All-Route-wise Resolvability
           </p>
@@ -122,81 +126,30 @@ const MiniDashboard = () => {
         </div>
 
         {/* Dummy */}
-        <div className="rounded-sm border border-slate-300 bg-slate-50 px-4 py-3">
+        <div className="rounded-sm border border-base-300 bg-base-200 px-4 py-3">
           <p className="text-xs uppercase tracking-wide text-slate-600">
             Route-wise Resolvability
           </p>
           <div className="grid grid-cols-6 mt-1">
-            <div className="w-8 h-8 bg-green-400 flex justify-center items-center text-white rounded-sm">
+            <div className="w-8 h-8 bg-green-200 flex justify-center items-center border border-green-500 text-green-600 rounded-sm">
               1
             </div>
-            <div className="w-8 h-8 bg-green-400 flex justify-center items-center text-white rounded-sm">
+            <div className="w-8 h-8 bg-green-200 flex justify-center items-center border border-green-500 text-green-600 rounded-sm">
               2
             </div>
-            <div className="w-8 h-8 bg-green-400 flex justify-center items-center text-white rounded-sm">
+            <div className="w-8 h-8 bg-green-200 flex justify-center items-center border border-green-500 text-green-600 rounded-sm">
               3
             </div>
-            <div className="w-8 h-8 bg-red-600 flex justify-center items-center text-white rounded-sm">
+            <div className="w-8 h-8 bg-green-200 flex justify-center items-center border border-green-500 text-green-600 rounded-sm">
               4
             </div>
-            <div className="w-8 h-8 bg-red-600 flex justify-center items-center text-white rounded-sm">
+            <div className="w-8 h-8 bg-green-200 flex justify-center items-center border border-green-500 text-green-600 rounded-sm">
               5
             </div>
-            <div className="w-8 h-8 bg-red-600 flex justify-center items-center text-white rounded-sm">
+            <div className="w-8 h-8 bg-red-200 flex justify-center items-center border border-red-500 text-red-600 rounded-sm">
               6
             </div>
           </div>
-        </div>
-
-        <div className="rounded-sm border border-slate-300 bg-slate-50 px-4 py-3">
-          <p className="text-xs uppercase tracking-wide text-slate-600">
-            Auto-Clusterization
-          </p>
-
-          {data?.routeWiseResolvability && (
-            <div className="mt-2 inline-flex items-center gap-2 rounded-sm border border-emerald-300 bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              Enabled
-            </div>
-          )}
-
-          {!data?.routeWiseResolvability && (
-            <div className="mt-2 inline-flex items-center gap-2 rounded-sm border border-rose-300 bg-rose-50 px-2 py-1 text-xs font-medium text-rose-700">
-              <span className="h-2 w-2 rounded-full bg-rose-500" />
-              Disabled
-            </div>
-          )}
-
-          {!data?.routeWiseResolvability && (
-            <div className="mt-2 inline-flex items-center gap-2 rounded-sm border border-amber-300 bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700">
-              <span className="h-2 w-2 rounded-full bg-amber-500" />
-              Can be Enabled
-            </div>
-          )}
-
-          <input type="checkbox" disabled className="toggle toggle-sm ml-5" />
-        </div>
-
-        <div className="rounded-sm border border-slate-300 bg-slate-50 px-4 py-3">
-          <p className="text-xs uppercase tracking-wide text-slate-600">
-            Route-wise Clusterization
-          </p>
-
-          {data?.routeWiseResolvability && (
-            <div className="mt-2 inline-flex items-center gap-2 rounded-sm border border-emerald-300 bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              Enabled
-            </div>
-          )}
-
-          {!data?.routeWiseResolvability && (
-            <div className="mt-2 inline-flex items-center gap-2 rounded-sm border border-amber-300 bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700">
-              <span className="h-2 w-2 rounded-full bg-amber-500" />
-              Can be Enabled
-            </div>
-          )}
-
-          <input type="checkbox" disabled className="toggle toggle-sm ml-5" />
         </div>
       </div>
     </>
