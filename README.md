@@ -24,7 +24,7 @@ Other major components include:
 - Secure communication with the backend API
 
 ## Technology Stack
-- React
+- React 19 (Vite)
 - TypeScript
 - REST APIs
 
