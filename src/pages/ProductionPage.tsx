@@ -1,109 +1,235 @@
+import { MapPin, Lock } from "lucide-react";
+import useGetProductions, {
+  type ProductionProps,
+} from "../hooks/useGetProductions";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { Search } from "lucide-react";
-import ProductionTable from "../components/production/ProductionTable";
-import type { ProductionRequest } from "../components/production/ProductionTable";
+import type { Coords } from "./FarmerPage";
+import MapModal from "../components/MapModal";
+import HoldModal from "../components/Modals/Productions/HoldModal";
 
-const initialRequests: ProductionRequest[] = [
-  {
-    id: "F001",
-    farmerName: "Sunil Perera",
-    volume: 125,
-    timeWindow: "06:00 - 08:00",
-    registeredAt: "2024-01-15 05:45",
-    status: "Active",
-  },
-  {
-    id: "F002",
-    farmerName: "Kamala Silva",
-    volume: 98,
-    timeWindow: "07:00 - 09:00",
-    registeredAt: "2024-01-15 06:12",
-    status: "Active",
-  },
-  {
-    id: "F003",
-    farmerName: "Nimal Fernando",
-    volume: 156,
-    timeWindow: "06:30 - 08:30",
-    registeredAt: "2024-01-15 05:58",
-    status: "Active",
-  },
-  {
-    id: "F004",
-    farmerName: "Anura Wickrama",
-    volume: 87,
-    timeWindow: "08:00 - 10:00",
-    registeredAt: "2024-01-15 07:20",
-    status: "Active",
-  },
-  {
-    id: "F005",
-    farmerName: "Priya Jayasinghe",
-    volume: 210,
-    timeWindow: "05:30 - 07:30",
-    registeredAt: "2024-01-15 05:15",
-    status: "Active",
-  },
-  {
-    id: "F006",
-    farmerName: "Ravi Dissanayake",
-    volume: 142,
-    timeWindow: "07:30 - 09:30",
-    registeredAt: "2024-01-15 06:45",
-    status: "Active",
-  },
-];
+const defaultValues = {
+  search: "",
+  filterBy: "",
+  date: "",
+  status: "pending",
+};
+
+type ProductionModalState =
+  | { type: null }
+  | { type: "map"; data: Coords }
+  | { type: "hold"; data: ProductionProps }
+  | { type: "unhold"; data: ProductionProps };
+
 const ProductionPage = () => {
-  const [search, setSearch] = useState("");
-  const [farmerId, setFarmerId] = useState("");
-  const [date, setDate] = useState("");
-  const [requests, setRequests] =
-    useState<ProductionRequest[]>(initialRequests);
+  const [modal, setModal] = useState<ProductionModalState>({ type: null });
+  const { register, handleSubmit, getValues } = useForm({
+    defaultValues,
+  });
+
+  const { data, isError, error, refetch, isFetching, isLoading } =
+    useGetProductions(getValues());
+
+  const statusHandler = (status: string) => {
+    if (status === "pending")
+      return <div className="badge badge-warning">Pending</div>;
+    if (status === "failed")
+      return <div className="badge badge-error">Failed</div>;
+    if (status === "collected")
+      return <div className="badge badge-success">Collected</div>;
+    if (status === "awaiting pickup")
+      return <div className="badge badge-primary">Awaiting</div>;
+  };
+
+  const openMapModal = (coords: Coords) =>
+    setModal({ type: "map", data: coords });
+
+  const openHoldModal = (production: ProductionProps) =>
+    setModal({ type: "hold", data: production });
+
+  const openUnholdModal = (production: ProductionProps) =>
+    setModal({ type: "unhold", data: production });
+
+  const closeModal = () => setModal({ type: null });
+
+  const submitHandler = () => {
+    refetch();
+  };
 
   return (
-    <div className="p-7 w-full">
-      <h1 className="text-2xl font-semibold">Production Overview</h1>
-      <p className="text-gray-500 text-sm mb-6">
-        Manage Pending collection requests
-      </p>
-      <div className="bg-base-100 rounded-xl shadow-md p-6">
-        <h2 className="text-lg font-semibold mb-4">
-          Pending Requests ({requests.length})
-        </h2>
-        <div className="flex flex-wrap items-center gap-4 mb-6">
-          <div className="relative w-full max-w-xl">
-            <Search
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none"
-            />
+    <div className="w-full flex flex-col gap-4">
+      <p className="text-gray-600 font-semibold">Production Overview</p>
 
-            <input
-              type="text"
-              placeholder="Search by farmer name..."
-              className="input input-bordered w-full pl-9"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <input
-            type="text"
-            placeholder="Filter by Farmer ID..."
-            className="input input-bordered w-48"
-            value={farmerId}
-            onChange={(e) => setFarmerId(e.target.value)}
-          />
-          <input
-            type="date"
-            className="input input-bordered w-44"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </div>
-        <ProductionTable
-          requests={requests}
-          onMap={(r) => console.log("Map clicked", r)}
-          onBlock={(r) => console.log("Block clicked", r)}
+      <form
+        className="flex items-center gap-4"
+        onSubmit={handleSubmit(submitHandler)}
+      >
+        {/* Search bar */}
+        <label className="input">
+          <svg
+            className="h-[1em] opacity-50"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
+            <g
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              strokeWidth="2.5"
+              fill="none"
+              stroke="currentColor"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </g>
+          </svg>
+          <input type="search" placeholder="Search" {...register("search")} />
+        </label>
+
+        {/* Filter */}
+        <select
+          defaultValue="none"
+          className="select"
+          {...register("filterBy")}
+        >
+          <option disabled={true}>Filter</option>
+          <option value="none">None</option>
+          <option value="id">ID</option>
+          <option value="name">Name</option>
+        </select>
+
+        {/* Date */}
+        <input type="date" className="input" {...register("date")} />
+
+        {/* Status */}
+        <select
+          defaultValue="pending"
+          className="select"
+          {...register("status")}
+        >
+          <option disabled={true}> Select by status</option>
+          <option value="all">All</option>
+          <option value="pending">Pending</option>
+          <option value="completed">Completed</option>
+          <option value="failed">Failed</option>
+          <option value="awaiting pickup">Awaiting pickup</option>
+        </select>
+
+        {/* Search Button */}
+        <button className="btn" type="submit">
+          <span
+            className={`${
+              (isFetching || isLoading) && "loading"
+            } loading-spinner`}
+          ></span>
+          Search
+        </button>
+      </form>
+
+      {/* Modal */}
+      {modal.type === "map" && (
+        <MapModal open onClose={closeModal} title="Map" coords={modal.data} />
+      )}
+
+      {modal.type === "hold" && (
+        <HoldModal
+          open
+          onClose={closeModal}
+          title="Hold Production"
+          subtitle="Upon hodling production will consider for route generation"
+          productionId={modal.data._id}
+          buttonText="Hold"
         />
+      )}
+
+      {modal.type === "unhold" && (
+        <HoldModal
+          open
+          onClose={closeModal}
+          title="Unhold Production"
+          subtitle="Upon hodling production will consider for route generation"
+          productionId={modal.data._id}
+          buttonText="Unhold"
+        />
+      )}
+
+      {/* Alert */}
+      {isError && (
+        <div role="alert" className="alert alert-error">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>{error.response?.data.message || error.message}</span>
+        </div>
+      )}
+
+      {/* Table */}
+      <div className="overflow-x-auto h-auto w-auto border border-slate-300 rounded-sm">
+        <table className="table table-md table-pin-rows table-pin-cols">
+          <thead>
+            <tr>
+              <td>Farmer ID</td>
+              <td>Name</td>
+              <td>Address</td>
+              <td>Production Volume</td>
+              <td>Status</td>
+              <td>Registration</td>
+              <td>Route</td>
+              <td></td>
+            </tr>
+          </thead>
+          <tbody className="overflow-y-scroll">
+            {data?.map((prod) => (
+              <tr
+                className={`hover:bg-base-200 cursor-pointer ${
+                  prod.blocked ? "bg-red-100" : ""
+                }`}
+              >
+                <td>{prod.farmer._id}</td>
+                <td>{prod.farmer.name}</td>
+                <td>{prod.farmer.address}</td>
+                <td>{prod.volume} L</td>
+                <td>{statusHandler(prod.status)}</td>
+                <td>{new Date(prod.registration_time).toLocaleString()}</td>
+                <td>{prod.farmer.route}</td>
+                <td className="flex gap-2 justify-end">
+                  <button
+                    className="btn btn-ghost btn-sm"
+                    onClick={() =>
+                      openMapModal({
+                        lat: prod.farmer.location.lat,
+                        lng: prod.farmer.location.lon,
+                      })
+                    }
+                  >
+                    <MapPin className="size-4" />
+                  </button>
+                  <button
+                    className="btn btn-primary btn-ghost btn-sm"
+                    onClick={() => {
+                      if (prod.blocked) {
+                        openUnholdModal(prod);
+                      } else {
+                        openHoldModal(prod);
+                      }
+                    }}
+                  >
+                    <Lock className="size-4" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
