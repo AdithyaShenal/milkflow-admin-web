@@ -10,9 +10,7 @@ import HomePage from "../pages/HomePage";
 import RouteHistoryPage from "../pages/RouteHistoryPage";
 import DriverManagement from "../components/DriverManagement";
 import TruckManagement from "../components/TruckManagement";
-// import OptimizeSettings from "../pages/OptimizeSettings";
-// import AutoSettings from "../components/AutoSettings";
-// import RouteWiseSettings from "../components/RouteWiseSettings";
+import LoginPage from "../pages/LoginPage";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +18,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: "loginPage", element: <LoginPage /> },
       { path: "routing", element: <RoutingPage /> },
       { path: "production", element: <ProductionPage /> },
       {
@@ -36,20 +35,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-      // {
-      //   path: "optimizeSettings",
-      //   element: <OptimizeSettings />,
-      //   children: [
-      //     {
-      //       index: true,
-      //       element: <AutoSettings />,
-      //     },
-      //     {
-      //       path: "routeWiseSettings",
-      //       element: <RouteWiseSettings />,
-      //     },
-      //   ],
-      // },
       { path: "farmer", element: <FarmerPage /> },
       { path: "config", element: <ConfigPage /> },
       { path: "route_control", element: <RouteControlPage /> },

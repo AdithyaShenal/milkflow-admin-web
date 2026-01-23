@@ -102,7 +102,7 @@ export default function LoginPage() {
             type="submit"
             className="
               w-full h-12 rounded-xl font-semibold
-              bg-gradient-to-r from-blue-500 to-cyan-400
+              bg-linear-to-r from-blue-500 to-cyan-400
               hover:from-blue-600 hover:to-cyan-500
               shadow-lg shadow-blue-500/30
               transition-all duration-300
