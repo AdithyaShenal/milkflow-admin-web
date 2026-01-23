@@ -85,7 +85,7 @@ const RoutingPage = () => {
     queryFn: async () => {
       if (!routeWiseResolve) {
         const res = await axios.get(
-          "http://localhost:4000/api/routing/optimize/auto"
+          "http://localhost:4000/api/routing/optimize/auto",
         );
         return res.data;
       }
@@ -93,13 +93,13 @@ const RoutingPage = () => {
       // Route-wise mode
       if (selectedRoute === 0) {
         const res_1 = await axios.get(
-          "http://localhost:4000/api/routing/optimize/route-wise/all"
+          "http://localhost:4000/api/routing/optimize/route-wise/all",
         );
         return res_1.data;
       }
 
       const res_2 = await axios.get(
-        `http://localhost:4000/api/routing/optimize/route-wise/${selectedRoute}`
+        `http://localhost:4000/api/routing/optimize/route-wise/${selectedRoute}`,
       );
       return res_2.data;
     },
@@ -116,14 +116,14 @@ const RoutingPage = () => {
       routeWiseResolve
         ? ["routes", "route-wise", selectedRoute]
         : ["routes", "auto"],
-      (old) => old?.filter((r) => r.license_no !== route.license_no)
+      (old) => old?.filter((r) => r.license_no !== route.license_no),
     );
   };
 
   return (
     <>
       <div className="flex flex-col gap-6">
-        <p className="font-semibold">Generate Optimized Routes</p>
+        <p className="font-semibold text-sm">Generate Optimized Routes</p>
 
         <MiniDashboard />
         <div className="flex flex-wrap items-center gap-3 border border-base-300 bg-base-200 px-4 py-3 rounded-sm">

@@ -56,7 +56,7 @@ const FarmerPage = () => {
   return (
     <div className="w-full flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <p className="text-gray-600 font-semibold">Farmer Management</p>
+        <p className="font-semibold text-sm">Farmer Management</p>
         <button className="btn btn-primary btn-sm">
           <Plus className="size-3" />
           <p className="text-sm">Add Farmer</p>

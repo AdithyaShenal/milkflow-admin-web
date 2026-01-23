@@ -65,7 +65,7 @@ const DriverManagement = () => {
   return (
     <div className="w-full flex flex-col gap-4">
       <div className="flex justify-between">
-        <p className="text-gray-600 font-semibold">Driver Management</p>
+        <p className="font-semibold text-sm">Driver Management</p>
         <button
           className="btn btn-primary btn-sm"
           onClick={() => openAddModal()}

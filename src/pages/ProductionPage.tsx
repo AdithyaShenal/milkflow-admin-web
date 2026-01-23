@@ -58,7 +58,7 @@ const ProductionPage = () => {
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <p className="text-gray-600 font-semibold">Production Overview</p>
+      <p className="font-semibold text-sm">Production Overview</p>
 
       <form
         className="flex items-center gap-4"

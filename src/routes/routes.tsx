@@ -10,9 +10,9 @@ import HomePage from "../pages/HomePage";
 import RouteHistoryPage from "../pages/RouteHistoryPage";
 import DriverManagement from "../components/DriverManagement";
 import TruckManagement from "../components/TruckManagement";
-import OptimizeSettings from "../pages/OptimizeSettings";
-import AutoSettings from "../components/AutoSettings";
-import RouteWiseSettings from "../components/RouteWiseSettings";
+// import OptimizeSettings from "../pages/OptimizeSettings";
+// import AutoSettings from "../components/AutoSettings";
+// import RouteWiseSettings from "../components/RouteWiseSettings";
 
 const router = createBrowserRouter([
   {
@@ -36,21 +36,20 @@ const router = createBrowserRouter([
           },
         ],
       },
-      {
-        path: "optimizeSettings",
-        element: <OptimizeSettings />,
-        children: [
-          {
-            index: true,
-            path: "autoSettings",
-            element: <AutoSettings />,
-          },
-          {
-            path: "routeWiseSettings",
-            element: <RouteWiseSettings />,
-          },
-        ],
-      },
+      // {
+      //   path: "optimizeSettings",
+      //   element: <OptimizeSettings />,
+      //   children: [
+      //     {
+      //       index: true,
+      //       element: <AutoSettings />,
+      //     },
+      //     {
+      //       path: "routeWiseSettings",
+      //       element: <RouteWiseSettings />,
+      //     },
+      //   ],
+      // },
       { path: "farmer", element: <FarmerPage /> },
       { path: "config", element: <ConfigPage /> },
       { path: "route_control", element: <RouteControlPage /> },

@@ -26,7 +26,7 @@ const schema = z.object({
 
 type TruckFormData = z.infer<typeof schema>;
 
-const AddTruck = ({ open, onClose, title }: Props) => {
+const AddNextTruck = ({ open, onClose, title }: Props) => {
   const { mutate, isError, error, isPending } = useAddTrucks({
     onSuccess: () => {
       onClose();
@@ -204,4 +204,4 @@ const AddTruck = ({ open, onClose, title }: Props) => {
   );
 };
 
-export default AddTruck;
+export default AddNextTruck;

@@ -9,7 +9,7 @@ import {
   Route,
   History,
   FileSliders,
-  SlidersHorizontal,
+  // SlidersHorizontal,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -85,18 +85,18 @@ const Sidebar = () => {
             </li>
 
             {/* List item */}
-            <li>
+            {/* <li>
               <NavLink
                 to="/optimizeSettings"
                 className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
               >
-                {/* Settings icon */}
+
                 <SlidersHorizontal className="my-1.5 inline-block size-4" />
                 <span className="is-drawer-close:hidden">
                   Optimize Settings
                 </span>
               </NavLink>
-            </li>
+            </li> */}
 
             {/* List item */}
             <li>

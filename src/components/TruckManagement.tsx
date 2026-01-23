@@ -26,9 +26,8 @@ const TruckManagement = () => {
     defaultValues,
   });
 
-  const { data, isError, error, refetch, isFetching, isLoading } = useGetTrucks(
-    getValues()
-  );
+  const { data, isError, error, refetch, isFetching, isLoading } =
+    useGetTrucks(getValues());
 
   const {
     mutate: toggleTruckStatus,
@@ -64,7 +63,7 @@ const TruckManagement = () => {
   return (
     <div className="w-full flex flex-col gap-4">
       <div className="flex justify-between">
-        <p className="text-gray-600 font-semibold">Truck Management</p>
+        <p className="font-semibold text-sm">Truck Management</p>
         <button
           className="btn btn-primary btn-sm"
           onClick={() => openAddModal()}
