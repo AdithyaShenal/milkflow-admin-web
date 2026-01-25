@@ -1,31 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
 import MapComponent from "./MapComponent";
-import axios, { AxiosError } from "axios";
 import type { Route } from "./RoutingPage";
 import { useState } from "react";
 import RouteCard from "../components/map/RouteCard";
-
-interface ApiError {
-  message: string;
-  status: number;
-  details?: string;
-  code: string;
-}
+import useGetHistory from "../hooks/useGetHistory";
 
 const RouteHistoryPage = () => {
   const [mapRoute, setMapRoute] = useState<Route>();
 
-  const {
-    data: routes,
-    isError,
-    error,
-  } = useQuery<Route[], AxiosError<ApiError>>({
-    queryKey: ["routes", "InProgress"],
-    queryFn: () =>
-      axios
-        .get("http://localhost:4000/api/routing/history")
-        .then((res) => res.data),
-  });
+  const { data: routes, isError, error } = useGetHistory();
 
   const handleClick = (props: Route) => {
     setMapRoute(props);

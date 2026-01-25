@@ -1,56 +1,10 @@
 import MapComponent from "./MapComponent";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import RouteCardAdvance from "../components/map/RouteCardAdvance";
 import MiniDashboard from "../components/MiniDashboard";
-
-interface Farmer {
-  _id: string;
-  address: string;
-  location: {
-    lat: number;
-    lon: number;
-  };
-  name: string;
-  route: number;
-  updatedAt: string;
-  createdAt: string;
-  phone: string;
-}
-
-interface Production {
-  _id: string;
-  volume: number;
-  farmer: Farmer;
-  status: string;
-}
-
-interface Stop {
-  load_after_visit: number;
-  node: number;
-  order: number;
-  production: Production | null;
-}
-
-export interface Route {
-  _id: string;
-  distance: number;
-  stops: Stop[];
-  vehicle_id: number;
-  license_no: string;
-  load: number;
-  status: string;
-  model: string;
-  route: number;
-}
-
-interface ApiError {
-  message: string;
-  status: number;
-  details?: string;
-  code: string;
-}
+import useDispatchRoutes from "../hooks/useDispatchRoutes";
+import useGenerateRoutes, { type Route } from "../hooks/useGenerateRoutes";
 
 const RoutingPage = () => {
   const [mapRoute, setMapRoute] = useState<Route>();
@@ -64,12 +18,7 @@ const RoutingPage = () => {
     isPending,
     isError: isSaveRoutesrror,
     error: saveRoutesError,
-  } = useMutation<unknown, AxiosError<ApiError>, Route[]>({
-    mutationFn: (routes: Route[]) =>
-      axios
-        .post("http://localhost:4000/api/routing/dispatch", routes)
-        .then((res) => res.data),
-  });
+  } = useDispatchRoutes();
 
   const {
     data: routes,
@@ -77,35 +26,7 @@ const RoutingPage = () => {
     error,
     isFetching,
     refetch,
-  } = useQuery<Route[], AxiosError<ApiError>>({
-    queryKey: routeWiseResolve
-      ? ["routes", "route-wise", selectedRoute]
-      : ["routes", "auto"],
-
-    queryFn: async () => {
-      if (!routeWiseResolve) {
-        const res = await axios.get(
-          "http://localhost:4000/api/routing/optimize/auto",
-        );
-        return res.data;
-      }
-
-      // Route-wise mode
-      if (selectedRoute === 0) {
-        const res_1 = await axios.get(
-          "http://localhost:4000/api/routing/optimize/route-wise/all",
-        );
-        return res_1.data;
-      }
-
-      const res_2 = await axios.get(
-        `http://localhost:4000/api/routing/optimize/route-wise/${selectedRoute}`,
-      );
-      return res_2.data;
-    },
-    retry: 1,
-    enabled: false,
-  });
+  } = useGenerateRoutes(routeWiseResolve, selectedRoute);
 
   const onRouteCardClick = (props: Route) => {
     setMapRoute(props);

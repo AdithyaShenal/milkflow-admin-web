@@ -1,14 +1,14 @@
 import { useForm } from "react-hook-form";
-import type { FarmerProps } from "../../hooks/useGetProductions";
 import useUpdateFarmer from "../../hooks/useUpdateFarmer";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { Farmer } from "../../hooks/useGenerateRoutes";
 
 interface Props {
   open: boolean;
   onClose: () => void;
   title: string;
-  existingFarmer: FarmerProps;
+  existingFarmer: Farmer;
 }
 
 const schema = z.object({

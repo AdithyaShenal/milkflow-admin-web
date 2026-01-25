@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../services/apiClient";
-import type { APIError, FarmerProps } from "./useGetProductions";
+import type { APIError } from "./useGetProductions";
 import type { AxiosError } from "axios";
 import toast from "react-hot-toast";
+import type { Farmer } from "./useGenerateRoutes";
 
 export interface UpdateFarmerProps {
   _id: string;
@@ -19,7 +20,7 @@ interface Props {
 const useUpdateFarmer = ({ onSuccessClose }: Props) => {
   const queryClient = useQueryClient();
 
-  return useMutation<FarmerProps, AxiosError<APIError>, UpdateFarmerProps>({
+  return useMutation<Farmer, AxiosError<APIError>, UpdateFarmerProps>({
     mutationFn: async (payload) => {
       const res = await api.put(`/farmer/${payload._id}`, {
         name: payload.name,

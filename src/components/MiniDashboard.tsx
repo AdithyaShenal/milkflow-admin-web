@@ -1,33 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
-
-interface MiniDashboardProps {
-  totalVolume: number;
-  availableCapacity: number;
-  autoResolvability: boolean;
-  routeWiseResolvability: boolean;
-  autoClusterization: boolean;
-  routeWiseClusterization: boolean;
-}
-
-interface ApiError {
-  message: string;
-  status: number;
-  details?: string;
-  code: string;
-}
+import useMiniDashboard from "../hooks/useMiniDashboard";
 
 const MiniDashboard = () => {
-  const { data, isError, error } = useQuery<
-    MiniDashboardProps,
-    AxiosError<ApiError>
-  >({
-    queryKey: ["mini_dashboard"],
-    queryFn: () =>
-      axios
-        .get("http://localhost:4000/api/analytics/mini_dashboard")
-        .then((res) => res.data),
-  });
+  const { data, isError, error } = useMiniDashboard();
 
   console.log(data);
 

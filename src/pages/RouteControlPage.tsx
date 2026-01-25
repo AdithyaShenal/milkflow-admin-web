@@ -1,59 +1,25 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import MapComponent from "./MapComponent";
-import axios, { AxiosError } from "axios";
 import type { Route } from "./RoutingPage";
 import { useState } from "react";
 import RouteCardAdvance from "../components/map/RouteCardAdvance";
-
-interface ApiError {
-  message: string;
-  status: number;
-  details?: string;
-  code: string;
-}
+import useGetDispatchRoutes from "../hooks/useGetDispatchRoutes";
+import useGetInProgressRoutes from "../hooks/useGetInProgressRoutes";
+import useDeleteRoute from "../hooks/useDeleteRoute";
 
 const RouteControlPage = () => {
   const [mapRoute, setMapRoute] = useState<Route>();
 
-  const queryClient = useQueryClient();
-
-  const {
-    data: routes,
-    isError,
-    error,
-  } = useQuery<Route[], AxiosError<ApiError>>({
-    queryKey: ["routes", "dispatched"],
-    queryFn: () =>
-      axios
-        .get("http://localhost:4000/api/routing/dispatch")
-        .then((res) => res.data),
-  });
-
+  const { data: routes, isError, error } = useGetDispatchRoutes();
   const {
     data: routesInProgress,
     isError: isInProgressError,
     error: inProgressError,
-  } = useQuery<Route[], AxiosError<ApiError>>({
-    queryKey: ["routes", "InProgress"],
-    queryFn: () =>
-      axios
-        .get("http://localhost:4000/api/routing/in_progress")
-        .then((res) => res.data),
-  });
-
+  } = useGetInProgressRoutes();
   const {
     mutate,
     error: deleteError,
     isError: isDeleteError,
-  } = useMutation({
-    mutationFn: (route_id: string) =>
-      axios.delete(`http://localhost:4000/api/routing/routes/${route_id}`),
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["routes", "dispatched"] });
-      queryClient.invalidateQueries({ queryKey: ["routes", "InProgress"] });
-    },
-  });
+  } = useDeleteRoute();
 
   const handleClick = (props: Route) => {
     setMapRoute(props);

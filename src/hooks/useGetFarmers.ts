@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import axios from "axios";
-import type { APIError, FarmerProps } from "./useGetProductions";
+import type { APIError } from "./useGetProductions";
+import { api } from "../services/apiClient";
+import type { Farmer } from "./useGenerateRoutes";
 
 interface QueryParams {
   search: string;
@@ -10,14 +11,14 @@ interface QueryParams {
 }
 
 const useGetFarmers = (filters: QueryParams) => {
-  return useQuery<FarmerProps[], AxiosError<APIError>>({
+  return useQuery<Farmer[], AxiosError<APIError>>({
     queryKey: ["farmers", { ...filters }],
-    queryFn: () =>
-      axios
-        .get("http://localhost:4000/api/farmer", {
-          params: filters,
-        })
-        .then((res) => res.data),
+    queryFn: async () => {
+      const res = await api.get("/farmer", {
+        params: filters,
+      });
+      return res.data;
+    },
     enabled: !!filters,
   });
 };

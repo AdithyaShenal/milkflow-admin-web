@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import axios from "axios";
 import type { APIError } from "./useGetProductions";
+import { api } from "../services/apiClient";
 
 export interface Truck {
   _id: string;
@@ -24,12 +24,13 @@ interface QueryParams {
 const useGetTrucks = (filters: QueryParams) => {
   return useQuery<Truck[], AxiosError<APIError>>({
     queryKey: ["trucks", { ...filters }],
-    queryFn: () =>
-      axios
-        .get("http://localhost:4000/api/trucks", {
-          params: filters,
-        })
-        .then((res) => res.data),
+    queryFn: async () => {
+      const res = await api.get("/trucks", {
+        params: filters,
+      });
+
+      return res.data;
+    },
     enabled: !!filters,
   });
 };

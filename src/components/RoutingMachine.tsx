@@ -3,7 +3,6 @@ import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
 import { createNumberedMarkerIcon } from "./map/WaypointMarker";
 import { depotMarker } from "./map/DeportMarker";
-import "leaflet-polylineoffset";
 
 interface RoutingMachineProps extends ControlOptions {
   waypoints: LatLng[];
@@ -36,7 +35,7 @@ const createRoutineMachineLayer = (props: RoutingMachineProps) => {
     createMarker: function (
       i: number, // i: current waypoint index (0, 1, 2, ..., n-1)
       waypoint: { latLng: L.LatLng },
-      n: number // n: total number of waypoints
+      n: number, // n: total number of waypoints
     ) {
       // 1. Identify the last waypoint index
       const lastIndex = n - 1;

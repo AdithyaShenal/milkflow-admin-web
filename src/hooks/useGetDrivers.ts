@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import axios from "axios";
 import type { APIError } from "./useGetProductions";
+import { api } from "../services/apiClient";
 
 export interface Driver {
   _id: string;
@@ -22,12 +22,13 @@ interface QueryParams {
 const useGetDrivers = (filters: QueryParams) => {
   return useQuery<Driver[], AxiosError<APIError>>({
     queryKey: ["drivers", { ...filters }],
-    queryFn: () =>
-      axios
-        .get("http://localhost:4000/api/driver", {
-          params: filters,
-        })
-        .then((res) => res.data),
+    queryFn: async () => {
+      const res = await api.get("/driver", {
+        params: filters,
+      });
+
+      return res.data;
+    },
     enabled: !!filters,
   });
 };

@@ -1,37 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import axios from "axios";
-
-export interface FarmerProps {
-  _id: string;
-  name: string;
-  phone: string;
-  location: {
-    lat: number;
-    lon: number;
-  };
-  address: string;
-  route: number;
-}
-
-interface QualityProps {
-  fat: number;
-  lat: number;
-  density: number;
-  water_ratio: number;
-}
-
-export interface ProductionProps {
-  _id: string;
-  farmer: FarmerProps;
-  volume: number;
-  registration_time: string;
-  failure_reason: string;
-  status: string;
-  collectedVolume: number;
-  blocked: boolean;
-  quality: QualityProps;
-}
+import { api } from "../services/apiClient";
+import type { Production } from "./useGenerateRoutes";
 
 export interface APIError {
   message: string;
@@ -48,14 +18,14 @@ interface QueryParams {
 }
 
 const useGetProductions = (filters: QueryParams) => {
-  return useQuery<ProductionProps[], AxiosError<APIError>>({
+  return useQuery<Production[], AxiosError<APIError>>({
     queryKey: ["productions", { ...filters }],
-    queryFn: () =>
-      axios
-        .get("http://localhost:4000/api/production", {
-          params: filters,
-        })
-        .then((res) => res.data),
+    queryFn: async () => {
+      const res = await api.get("/production", {
+        params: filters,
+      });
+      return res.data;
+    },
     enabled: !!filters,
   });
 };
