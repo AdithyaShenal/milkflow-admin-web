@@ -244,6 +244,117 @@ const ConfigPage = () => {
     );
   };
 
+   const generatePDF = async () => {
+    if (!configs) {
+      alert("System configuration data is not available. Please try again.");
+      return;
+    }
+
+    // Check if at least one section is selected
+    const hasSelectedSections = reportSections.some(
+      (section) => section.enabled,
+    );
+    if (!hasSelectedSections) {
+      alert("Please select at least one report section to generate the PDF.");
+      return;
+    }
+
+    if (isGeneratingPDF) return;
+
+    setIsGeneratingPDF(true);
+
+    try {
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 20;
+      let yPosition = margin;
+
+      // Always use safe data (with realistic fallbacks)
+      const safeDashboardData = getSafeDashboardData();
+      const today = new Date();
+      const formattedToday = formatDate(today.toISOString().split("T")[0]);
+
+      // Title
+      doc.setFontSize(22);
+      doc.setFont("helvetica", "bold");
+      doc.text("Milk Collection & Logistics System", pageWidth / 2, yPosition, {
+        align: "center",
+      });
+      yPosition += 10;
+
+      doc.setFontSize(18);
+      doc.text("Operational Performance Report", pageWidth / 2, yPosition, {
+        align: "center",
+      });
+      yPosition += 15;
+
+      // Report Period
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Report Date: ${formattedToday}`, pageWidth / 2, yPosition, {
+        align: "center",
+      });
+      yPosition += 10;
+
+      // Generation Date
+      doc.setFontSize(9);
+      doc.text(
+        `Generated: ${new Date().toLocaleString()}`,
+        pageWidth / 2,
+        yPosition,
+        { align: "center" },
+      );
+      yPosition += 15;
+
+      // Add a line
+      doc.setLineWidth(0.5);
+      doc.line(margin, yPosition, pageWidth - margin, yPosition);
+      yPosition += 15;
+
+      // EXECUTIVE SUMMARY (only if enabled)
+      if (reportSections[0].enabled) {
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("Executive Summary", margin, yPosition);
+        yPosition += 10;
+
+        const executiveSummary = [
+          [
+            "Total Milk Collected (Month)",
+            `${safeDashboardData.summaryCards.totalLitersThisMonth.toLocaleString()} Liters`,
+          ],
+          [
+            "Daily Average Collection",
+            `${safeDashboardData.summaryCards.totalLitersToday.toLocaleString()} Liters`,
+          ],
+          [
+            "Production Success Rate",
+            `${safeDashboardData.weeklyCharts.productionStatusRatio.completed}%`,
+          ],
+          [
+            "Route Utilization",
+            `${safeDashboardData.additionalCharts.routeEfficiency.routeUtilization}%`,
+          ],
+          [
+            "Quality Score",
+            `${safeDashboardData.additionalCharts.qualityTrends.avgFatContent}% Average Fat Content`,
+          ],
+        ];
+
+        autoTable(doc, {
+          startY: yPosition,
+          head: [["Key Performance Indicator", "Value"]],
+          body: executiveSummary,
+          theme: "grid",
+          headStyles: { fillColor: [41, 128, 185] },
+          margin: { left: margin, right: margin },
+          styles: { fontSize: 11, cellPadding: 6 },
+        });
+
+        yPosition = doc.lastAutoTable?.finalY || yPosition;
+        yPosition += 20;
+      }
+
   return (
     <div className="w-full mx-auto space-y-4">
       {/* Alert */}
