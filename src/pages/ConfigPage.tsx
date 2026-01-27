@@ -625,111 +625,125 @@ const ConfigPage = () => {
             />
           )}
         </div>
-       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Depot Location Card (Left Side) */}
-        <div className="lg:col-span-2">
-          <div className="card bg-base-100 border border-slate-200">
-            <div className="card-body">
-              <h2 className="card-title text-lg font-semibold">
-                Operational Control Center
-              </h2>
-              <p className="text-sm text-gray-500">
-                Depot location management and system monitoring
-              </p>
-  
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Depot Location Card (Left Side) */}
+          <div className="lg:col-span-2">
+            <div className="card bg-base-100 border border-slate-200">
+              <div className="card-body">
+                <h2 className="card-title text-lg font-semibold">
+                  Operational Control Center
+                </h2>
+                <p className="text-sm text-gray-500">
+                  Depot location management and system monitoring
+                </p>
 
-        <div className="flex flex-col rounded-sm border border-slate-300 p-4 bg-base-100">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-600">
-              Coordinates
-            </label>
+                <div className="flex flex-col rounded-sm border border-slate-300 p-4 bg-base-100">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-600">
+                      Coordinates
+                    </label>
 
-            {configs && (
-              <input
-                type="text"
-                readOnly
-                className="input input-bordered w-full font-mono"
-                value={
-                  location
-                    ? `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`
-                    : `${configs.depot_location.lat}, ${configs.depot_location.lon}`
-                }
-              />
-            )}
+                    {configs && (
+                      <input
+                        type="text"
+                        readOnly
+                        className="input input-bordered w-full font-mono"
+                        value={
+                          location
+                            ? `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`
+                            : `${configs.depot_location.lat}, ${configs.depot_location.lon}`
+                        }
+                      />
+                    )}
 
-             <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="h-[320px] rounded-lg border border-slate-300 overflow-hidden">
-                  {configs && (
-                    <LocationFetchMap
-                      initialLocation={{
-                        lat: configs.depot_location.lat,
-                        lon: configs.depot_location.lon,
-                      }}
-                      onLocationChange={(loc: Location) => setLocation(loc)}
-                    />
-                  )}
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="h-[320px] rounded-lg border border-slate-300 overflow-hidden">
+                        {configs && (
+                          <LocationFetchMap
+                            initialLocation={{
+                              lat: configs.depot_location.lat,
+                              lon: configs.depot_location.lon,
+                            }}
+                            onLocationChange={(loc: Location) =>
+                              setLocation(loc)
+                            }
+                          />
+                        )}
+                      </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-sm font-medium text-gray-600">
+                            Depot Coordinates
+                          </label>
+                          {configs && (
+                            <div className="mt-1">
+                              <input
+                                type="text"
+                                readOnly
+                                className="input input-bordered w-full font-mono bg-gray-50"
+                                value={
+                                  location
+                                    ? `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`
+                                    : `${configs.depot_location.lat}, ${configs.depot_location.lon}`
+                                }
+                              />
+                              <p className="text-xs text-gray-500 mt-1">
+                                Current GPS coordinates of the main depot
+                              </p>
+                            </div>
+                          )}
+                        </div>
+
+                        <div>
+                          <button
+                            onClick={submitHandler}
+                            className="btn btn-primary w-full"
+                            disabled={!location || isPending}
+                          >
+                            {isPending ? (
+                              <>
+                                <span className="loading loading-spinner"></span>{" "}
+                                Updating...
+                              </>
+                            ) : (
+                              "Update Depot Location"
+                            )}
+                          </button>
+                          {location && (
+                            <p className="text-xs text-gray-500 mt-2">
+                              New coordinates will be saved:{" "}
+                              {location.lat.toFixed(6)},{" "}
+                              {location.lon.toFixed(6)}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">
-                      Depot Coordinates
-                    </label>
-                    {configs && (
-                      <div className="mt-1">
-                        <input
-                          type="text"
-                          readOnly
-                          className="input input-bordered w-full font-mono bg-gray-50"
-                          value={
-                            location
-                              ? `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`
-                              : `${configs.depot_location.lat}, ${configs.depot_location.lon}`
-                          }
-                        />
-                        <p className="text-xs text-gray-500 mt-1">
-                          Current GPS coordinates of the main depot
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  <div>
-                    <button
-                      onClick={submitHandler}
-                      className="btn btn-primary w-full"
-                      disabled={!location || isPending}
-                    >
-                      {isPending ? (
-                        <>
-                          <span className="loading loading-spinner"></span>{" "}
-                          Updating...
-                        </>
-                      ) : (
-                        "Update Depot Location"
-                      )}
-                    </button>
-                    {location && (
-                      <p className="text-xs text-gray-500 mt-2">
-                        New coordinates will be saved: {location.lat.toFixed(6)}
-                        , {location.lon.toFixed(6)}
-                      </p>
-                    )}
+                <div className="pt-4">
+                  <button
+                    onClick={submitHandler}
+                    className="btn btn-primary w-full"
+                    disabled={!location || isPending}
+                  >
+                    Save Depot Location
+                  </button>
+                  <div className="mt-3 text-xs text-gray-600">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                      <span>
+                        Sections:{" "}
+                        {reportSections.filter((s) => s.enabled).length}{" "}
+                        selected
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
-          </div>
-
-          <div className="pt-4">
-            <button
-              onClick={submitHandler}
-              className="btn btn-primary w-full"
-              disabled={!location || isPending}
-            >
-              Save Depot Location
-            </button>
           </div>
         </div>
       </div>
