@@ -656,6 +656,70 @@ const ConfigPage = () => {
                 }
               />
             )}
+
+             <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="h-[320px] rounded-lg border border-slate-300 overflow-hidden">
+                  {configs && (
+                    <LocationFetchMap
+                      initialLocation={{
+                        lat: configs.depot_location.lat,
+                        lon: configs.depot_location.lon,
+                      }}
+                      onLocationChange={(loc: Location) => setLocation(loc)}
+                    />
+                  )}
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">
+                      Depot Coordinates
+                    </label>
+                    {configs && (
+                      <div className="mt-1">
+                        <input
+                          type="text"
+                          readOnly
+                          className="input input-bordered w-full font-mono bg-gray-50"
+                          value={
+                            location
+                              ? `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`
+                              : `${configs.depot_location.lat}, ${configs.depot_location.lon}`
+                          }
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Current GPS coordinates of the main depot
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <button
+                      onClick={submitHandler}
+                      className="btn btn-primary w-full"
+                      disabled={!location || isPending}
+                    >
+                      {isPending ? (
+                        <>
+                          <span className="loading loading-spinner"></span>{" "}
+                          Updating...
+                        </>
+                      ) : (
+                        "Update Depot Location"
+                      )}
+                    </button>
+                    {location && (
+                      <p className="text-xs text-gray-500 mt-2">
+                        New coordinates will be saved: {location.lat.toFixed(6)}
+                        , {location.lon.toFixed(6)}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
 
           <div className="pt-4">
