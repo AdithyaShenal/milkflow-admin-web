@@ -66,6 +66,16 @@ const ConfigPage = () => {
   const { data: configs, isLoading, isError, error } = useGetConfigurations();
   const { mutate: updateLocation, isPending } = useUpdateDepotLocation();
 
+  // Simple report sections with checkboxes
+  const [reportSections, setReportSections] = useState<ReportSection[]>([
+    { id: "executive_summary", label: "Executive Summary", enabled: true },
+    { id: "daily_metrics", label: "Daily Metrics", enabled: true },
+    { id: "production_analysis", label: "Production Analysis", enabled: true },
+    { id: "quality_metrics", label: "Quality Metrics", enabled: true },
+    { id: "route_efficiency", label: "Route Efficiency", enabled: true },
+    { id: "system_summary", label: "System Summary", enabled: true },
+  ]);
+
   if (isLoading)
     return (
       <>
