@@ -355,6 +355,157 @@ const ConfigPage = () => {
         yPosition += 20;
       }
 
+      // DAILY OPERATIONAL METRICS (only if enabled)
+      if (reportSections[1].enabled) {
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("Daily Operational Metrics", margin, yPosition);
+        yPosition += 10;
+
+        const dailyMetrics = [
+          [
+            "Liters Collected Today",
+            `${safeDashboardData.summaryCards.totalLitersToday.toLocaleString()} L`,
+          ],
+          [
+            "Pending Collections",
+            `${safeDashboardData.summaryCards.totalProductionPending}`,
+          ],
+          [
+            "Average Pickups per Vehicle",
+            `${safeDashboardData.summaryCards.avgPickupsPerVehicle}`,
+          ],
+          ["Active Data Points", `${safeDashboardData.rawData.dataPoints}`],
+          ["Report Date", formattedToday],
+        ];
+
+        autoTable(doc, {
+          startY: yPosition,
+          head: [["Metric", "Value"]],
+          body: dailyMetrics,
+          theme: "striped",
+          headStyles: { fillColor: [39, 174, 96] },
+          margin: { left: margin, right: margin },
+          styles: { fontSize: 10, cellPadding: 5 },
+        });
+
+        yPosition = doc.lastAutoTable?.finalY || yPosition;
+        yPosition += 20;
+      }
+
+      // PRODUCTION ANALYSIS (only if enabled)
+      if (reportSections[2].enabled) {
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("Production Performance Analysis", margin, yPosition);
+        yPosition += 10;
+
+        const productionAnalysis = [
+          [
+            "Total Monthly Production",
+            `${safeDashboardData.summaryCards.totalLitersThisMonth.toLocaleString()} L`,
+          ],
+          [
+            "Completed Collections",
+            `${safeDashboardData.weeklyCharts.productionStatusRatio.completed}%`,
+          ],
+          [
+            "Collection Issues",
+            `${safeDashboardData.weeklyCharts.productionStatusRatio.failed}%`,
+          ],
+          [
+            "Pending Processing",
+            `${safeDashboardData.summaryCards.totalProductionPending} items`,
+          ],
+          ["Week Starting", formatDate(safeDashboardData.rawData.weekStart)],
+        ];
+
+        autoTable(doc, {
+          startY: yPosition,
+          head: [["Production Metric", "Status"]],
+          body: productionAnalysis,
+          theme: "grid",
+          headStyles: { fillColor: [155, 89, 182] },
+          margin: { left: margin, right: margin },
+          styles: { fontSize: 10, cellPadding: 5 },
+        });
+
+        yPosition = doc.lastAutoTable?.finalY || yPosition;
+        yPosition += 20;
+      }
+
+      // QUALITY CONTROL METRICS (only if enabled)
+      if (reportSections[3].enabled) {
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("Quality Control Metrics", margin, yPosition);
+        yPosition += 10;
+
+        const qualityMetrics = [
+          [
+            "Average Fat Content",
+            `${safeDashboardData.additionalCharts.qualityTrends.avgFatContent}%`,
+          ],
+          [
+            "Average Milk Density",
+            `${safeDashboardData.additionalCharts.qualityTrends.avgDensity} g/mL`,
+          ],
+          [
+            "Quality Rejection Rate",
+            `${safeDashboardData.additionalCharts.qualityTrends.rejectionRate}%`,
+          ],
+        ];
+
+        autoTable(doc, {
+          startY: yPosition,
+          head: [["Quality Parameter", "Measurement"]],
+          body: qualityMetrics,
+          theme: "striped",
+          headStyles: { fillColor: [231, 76, 60] },
+          margin: { left: margin, right: margin },
+          styles: { fontSize: 10, cellPadding: 5 },
+        });
+
+        yPosition = doc.lastAutoTable?.finalY || yPosition;
+        yPosition += 20;
+      }
+
+      // ROUTE EFFICIENCY ANALYSIS (only if enabled)
+      if (reportSections[4].enabled) {
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("Route Efficiency Analysis", margin, yPosition);
+        yPosition += 10;
+
+        const routeEfficiency = [
+          [
+            "Most Efficient Route",
+            `Route #${safeDashboardData.additionalCharts.routeEfficiency.mostEfficientRoute}`,
+          ],
+          [
+            "Route Utilization Rate",
+            `${safeDashboardData.additionalCharts.routeEfficiency.routeUtilization}%`,
+          ],
+          [
+            "Average Collection Time",
+            `${safeDashboardData.additionalCharts.routeEfficiency.avgCollectionTime} hours`,
+          ],
+        ];
+
+        autoTable(doc, {
+          startY: yPosition,
+          head: [["Route Metric", "Value"]],
+          body: routeEfficiency,
+          theme: "grid",
+          headStyles: { fillColor: [149, 165, 166] },
+          margin: { left: margin, right: margin },
+          styles: { fontSize: 10, cellPadding: 5 },
+        });
+
+        yPosition = doc.lastAutoTable?.finalY || yPosition;
+        yPosition += 20;
+      }
+
   return (
     <div className="w-full mx-auto space-y-4">
       {/* Alert */}
