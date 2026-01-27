@@ -82,6 +82,26 @@ const ConfigPage = () => {
         <FullLoadingPage />
       </>
     );
+  useEffect(() => {
+    if (configs && !location) {
+      setLocation(configs.depot_location);
+    }
+  }, [configs, location]);
+
+  if (isLoading) return <FullLoadingPage />;
+
+  const formatDate = (dateString: string): string => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    } catch {
+      return dateString;
+    }
+  };
 
   const submitHandler = () => {
     if (!location) return;
