@@ -1,12 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 import LocationFetchMap from "../components/map/LocationFetch";
 import useGetConfigurations from "../hooks/useGetConfigurations";
 import FullLoadingPage from "../components/Loading/FullLoadingPage";
 import useUpdateDepotLocation from "../hooks/useUpdateDepotLocation";
 
+declare module "jspdf" {
+  interface jsPDF {
+    lastAutoTable?: {
+      finalY: number;
+    };
+  }
+}
+
 interface Location {
   lat: number;
   lon: number;
+}
+
+interface DashboardData {
+  summaryCards: {
+    totalLitersToday: number;
+    totalLitersThisMonth: number;
+    avgPickupsPerVehicle: number;
+    totalProductionPending: number;
+  };
+  weeklyCharts: {
+    litersPerDay: Array<{ x: string; y: number }>;
+    distancePerDay: Array<{ x: string; y: number }>;
+    productionStatusRatio: {
+      completed: number;
+      failed: number;
+    };
+  };
+  additionalCharts: {
+    productionsPerDay: Array<{ date: string; productions: number }>;
+    qualityTrends: {
+      avgFatContent: number;
+      avgDensity: number;
+      rejectionRate: number;
+    };
+    routeEfficiency: {
+      mostEfficientRoute: number;
+      avgCollectionTime: number;
+      routeUtilization: number;
+    };
+  };
+  rawData: {
+    todayDate: string;
+    weekStart: string;
+    dataPoints: number;
+  };
+}
+
+interface ReportSection {
+  id: string;
+  label: string;
+  enabled: boolean;
 }
 
 const ConfigPage = () => {
