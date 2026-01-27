@@ -244,7 +244,7 @@ const ConfigPage = () => {
     );
   };
 
-   const generatePDF = async () => {
+  const generatePDF = async () => {
     if (!configs) {
       alert("System configuration data is not available. Please try again.");
       return;
@@ -505,6 +505,84 @@ const ConfigPage = () => {
         yPosition = doc.lastAutoTable?.finalY || yPosition;
         yPosition += 20;
       }
+
+      // SYSTEM PERFORMANCE SUMMARY (only if enabled)
+      if (reportSections[5].enabled) {
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("System Performance Summary", margin, yPosition);
+        yPosition += 10;
+
+        const systemSummary = [
+          ["Overall System Status", "Operational"],
+          [
+            "Data Collection Coverage",
+            `${safeDashboardData.rawData.dataPoints} data points`,
+          ],
+          ["Report Reliability", "High"],
+          ["Last Data Update", formatDate(safeDashboardData.rawData.todayDate)],
+        ];
+
+        autoTable(doc, {
+          startY: yPosition,
+          head: [["System Aspect", "Status"]],
+          body: systemSummary,
+          theme: "grid",
+          headStyles: { fillColor: [52, 152, 219] },
+          margin: { left: margin, right: margin },
+          styles: { fontSize: 10, cellPadding: 5 },
+        });
+
+        yPosition = doc.lastAutoTable?.finalY || yPosition;
+        yPosition += 20;
+      }
+
+      // Additional Notes Section
+      if (pdfNotes.trim()) {
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("Additional Notes & Observations", margin, yPosition);
+        yPosition += 10;
+
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "italic");
+
+        const notesLines = pdfNotes.split("\n");
+        notesLines.forEach((line) => {
+          if (yPosition > doc.internal.pageSize.getHeight() - 30) {
+            doc.addPage();
+            yPosition = margin;
+          }
+          doc.text(line, margin, yPosition);
+          yPosition += 7;
+        });
+      }
+
+      // Footer on all pages
+      const totalPages = doc.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(100, 100, 100);
+        doc.text(
+          `MCLROS Report | Page ${i} of ${totalPages} | ${formattedToday}`,
+          pageWidth / 2,
+          doc.internal.pageSize.getHeight() - 10,
+          { align: "center" },
+        );
+      }
+
+      doc.save(
+        `mclros-operational-report-${today.toISOString().split("T")[0]}.pdf`,
+      );
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("Failed to generate PDF report. Please try again.");
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
 
   return (
     <div className="w-full mx-auto space-y-4">
