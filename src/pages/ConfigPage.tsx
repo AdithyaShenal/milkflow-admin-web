@@ -3,6 +3,7 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import LocationFetchMap from "../components/map/LocationFetch";
 import useGetConfigurations from "../hooks/useGetConfigurations";
+import useGetDashboardData from "../hooks/useGetDashboardData";
 import FullLoadingPage from "../components/Loading/FullLoadingPage";
 import useUpdateDepotLocation from "../hooks/useUpdateDepotLocation";
 
@@ -62,9 +63,8 @@ interface ReportSection {
 
 const ConfigPage = () => {
   const [location, setLocation] = useState<Location | null>(null);
-
-  const { data: configs, isLoading, isError, error } = useGetConfigurations();
-  const { mutate: updateLocation, isPending } = useUpdateDepotLocation();
+  const [pdfNotes, setPdfNotes] = useState<string>("");
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Simple report sections with checkboxes
   const [reportSections, setReportSections] = useState<ReportSection[]>([
@@ -76,12 +76,10 @@ const ConfigPage = () => {
     { id: "system_summary", label: "System Summary", enabled: true },
   ]);
 
-  if (isLoading)
-    return (
-      <>
-        <FullLoadingPage />
-      </>
-    );
+  const { data: configs, isLoading, isError, error } = useGetConfigurations();
+  const { data: dashboardData } = useGetDashboardData();
+  const { mutate: updateLocation, isPending } = useUpdateDepotLocation();
+
   useEffect(() => {
     if (configs && !location) {
       setLocation(configs.depot_location);
@@ -105,7 +103,6 @@ const ConfigPage = () => {
 
   const submitHandler = () => {
     if (!location) return;
-
     updateLocation({
       depotCoords: {
         lat: location.lat,
@@ -585,8 +582,7 @@ const ConfigPage = () => {
   };
 
   return (
-    <div className="w-full mx-auto space-y-4">
-      {/* Alert */}
+    <div className="w-full mx-auto space-y-6">
       {isError && (
         <div role="alert" className="alert alert-error">
           <svg
@@ -607,130 +603,182 @@ const ConfigPage = () => {
       )}
 
       <div>
-        <p className="text-lg font-semibold text-gray-700">Depot Location</p>
+        <h1 className="text-2xl font-bold text-gray-800">System Dashboard</h1>
         <p className="text-sm text-gray-500">
-          Pick the depot location by clicking or dragging the pin
+          Monitor operations and generate performance reports
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="h-[420px] rounded-sm border border-slate-300 overflow-hidden">
-          {configs && (
-            <LocationFetchMap
-              initialLocation={{
-                lat: configs.depot_location.lat,
-                lon: configs.depot_location.lon,
-              }}
-              onLocationChange={(loc: Location) => setLocation(loc)}
-            />
-          )}
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Depot Location Card (Left Side) */}
-          <div className="lg:col-span-2">
-            <div className="card bg-base-100 border border-slate-200">
-              <div className="card-body">
-                <h2 className="card-title text-lg font-semibold">
-                  Operational Control Center
-                </h2>
-                <p className="text-sm text-gray-500">
-                  Depot location management and system monitoring
-                </p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Depot Location Card (Left Side) */}
+        <div className="lg:col-span-2">
+          <div className="card bg-base-100 border border-slate-200">
+            <div className="card-body">
+              <h2 className="card-title text-lg font-semibold">
+                Operational Control Center
+              </h2>
+              <p className="text-sm text-gray-500">
+                Depot location management and system monitoring
+              </p>
 
-                <div className="flex flex-col rounded-sm border border-slate-300 p-4 bg-base-100">
-                  <div className="space-y-2">
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="h-[320px] rounded-lg border border-slate-300 overflow-hidden">
+                  {configs && (
+                    <LocationFetchMap
+                      initialLocation={{
+                        lat: configs.depot_location.lat,
+                        lon: configs.depot_location.lon,
+                      }}
+                      onLocationChange={(loc: Location) => setLocation(loc)}
+                    />
+                  )}
+                </div>
+
+                <div className="space-y-4">
+                  <div>
                     <label className="text-sm font-medium text-gray-600">
-                      Coordinates
+                      Depot Coordinates
                     </label>
-
                     {configs && (
-                      <input
-                        type="text"
-                        readOnly
-                        className="input input-bordered w-full font-mono"
-                        value={
-                          location
-                            ? `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`
-                            : `${configs.depot_location.lat}, ${configs.depot_location.lon}`
-                        }
-                      />
+                      <div className="mt-1">
+                        <input
+                          type="text"
+                          readOnly
+                          className="input input-bordered w-full font-mono bg-gray-50"
+                          value={
+                            location
+                              ? `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`
+                              : `${configs.depot_location.lat}, ${configs.depot_location.lon}`
+                          }
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Current GPS coordinates of the main depot
+                        </p>
+                      </div>
                     )}
+                  </div>
 
-                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="h-[320px] rounded-lg border border-slate-300 overflow-hidden">
-                        {configs && (
-                          <LocationFetchMap
-                            initialLocation={{
-                              lat: configs.depot_location.lat,
-                              lon: configs.depot_location.lon,
-                            }}
-                            onLocationChange={(loc: Location) =>
-                              setLocation(loc)
-                            }
-                          />
-                        )}
+                  <div>
+                    <button
+                      onClick={submitHandler}
+                      className="btn btn-primary w-full"
+                      disabled={!location || isPending}
+                    >
+                      {isPending ? (
+                        <>
+                          <span className="loading loading-spinner"></span>{" "}
+                          Updating...
+                        </>
+                      ) : (
+                        "Update Depot Location"
+                      )}
+                    </button>
+                    {location && (
+                      <p className="text-xs text-gray-500 mt-2">
+                        New coordinates will be saved: {location.lat.toFixed(6)}
+                        , {location.lon.toFixed(6)}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Report Generator Card (Right Side) */}
+        <div>
+          <div className="card bg-base-100 border border-slate-200">
+            <div className="card-body">
+              <h2 className="card-title text-lg font-semibold">
+                Performance Report Generator
+              </h2>
+              <p className="text-sm text-gray-500">
+                Generate operational reports
+              </p>
+
+              <div className="space-y-4 mt-4">
+                {/* Report Content - SIMPLIFIED */}
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <h3 className="text-sm font-semibold text-gray-800 mb-3">
+                    Report Content
+                  </h3>
+
+                  <div className="space-y-2">
+                    {reportSections.map((section) => (
+                      <div key={section.id} className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-sm"
+                          checked={section.enabled}
+                          onChange={() => toggleSection(section.id)}
+                          id={`section-${section.id}`}
+                        />
+                        <label
+                          htmlFor={`section-${section.id}`}
+                          className="text-sm text-gray-700 cursor-pointer"
+                        >
+                          {section.label}
+                        </label>
                       </div>
-
-                      <div className="space-y-4">
-                        <div>
-                          <label className="text-sm font-medium text-gray-600">
-                            Depot Coordinates
-                          </label>
-                          {configs && (
-                            <div className="mt-1">
-                              <input
-                                type="text"
-                                readOnly
-                                className="input input-bordered w-full font-mono bg-gray-50"
-                                value={
-                                  location
-                                    ? `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`
-                                    : `${configs.depot_location.lat}, ${configs.depot_location.lon}`
-                                }
-                              />
-                              <p className="text-xs text-gray-500 mt-1">
-                                Current GPS coordinates of the main depot
-                              </p>
-                            </div>
-                          )}
-                        </div>
-
-                        <div>
-                          <button
-                            onClick={submitHandler}
-                            className="btn btn-primary w-full"
-                            disabled={!location || isPending}
-                          >
-                            {isPending ? (
-                              <>
-                                <span className="loading loading-spinner"></span>{" "}
-                                Updating...
-                              </>
-                            ) : (
-                              "Update Depot Location"
-                            )}
-                          </button>
-                          {location && (
-                            <p className="text-xs text-gray-500 mt-2">
-                              New coordinates will be saved:{" "}
-                              {location.lat.toFixed(6)},{" "}
-                              {location.lon.toFixed(6)}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
 
-                <div className="pt-4">
+                {/* Additional Notes */}
+                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium text-yellow-800">
+                        Report Notes
+                      </span>
+                      <span className="label-text-alt text-gray-500">
+                        Optional
+                      </span>
+                    </label>
+                    <textarea
+                      className="textarea textarea-bordered h-32 bg-white"
+                      placeholder="Add notes for this report..."
+                      value={pdfNotes}
+                      onChange={(e) => setPdfNotes(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                {/* Generate Button */}
+                <div className="mt-6">
                   <button
-                    onClick={submitHandler}
-                    className="btn btn-primary w-full"
-                    disabled={!location || isPending}
+                    onClick={generatePDF}
+                    className="btn btn-primary w-full gap-2 hover:shadow-lg transition-shadow"
+                    disabled={
+                      isGeneratingPDF ||
+                      reportSections.filter((s) => s.enabled).length === 0
+                    }
                   >
-                    Save Depot Location
+                    {isGeneratingPDF ? (
+                      <>
+                        <span className="loading loading-spinner"></span>
+                        Generating Report...
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V8z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        Generate Report
+                      </>
+                    )}
                   </button>
+
                   <div className="mt-3 text-xs text-gray-600">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-blue-500"></div>
