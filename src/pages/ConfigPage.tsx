@@ -625,6 +625,18 @@ const ConfigPage = () => {
             />
           )}
         </div>
+       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Depot Location Card (Left Side) */}
+        <div className="lg:col-span-2">
+          <div className="card bg-base-100 border border-slate-200">
+            <div className="card-body">
+              <h2 className="card-title text-lg font-semibold">
+                Operational Control Center
+              </h2>
+              <p className="text-sm text-gray-500">
+                Depot location management and system monitoring
+              </p>
+  
 
         <div className="flex flex-col rounded-sm border border-slate-300 p-4 bg-base-100">
           <div className="space-y-2">
