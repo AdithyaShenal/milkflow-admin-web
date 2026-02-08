@@ -127,7 +127,6 @@ export default function DistanceLineChart() {
 
   return (
     <div className="bg-white border border-base-200 rounded-2xl shadow-sm overflow-hidden">
-      {/* Header */}
       <div className="px-6 py-5 border-b border-base-200 bg-gradient-to-r from-indigo-50 to-white">
         <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
         <p className="text-sm text-base-content/60 mt-1">
@@ -135,7 +134,6 @@ export default function DistanceLineChart() {
         </p>
       </div>
 
-      {/* Mini stats row */}
       <div className="px-6 py-4 border-b border-base-200">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="rounded-2xl border border-base-200 bg-white p-4 shadow-sm">
@@ -182,11 +180,8 @@ export default function DistanceLineChart() {
         </div>
       </div>
 
-      {/* Body */}
       <div className="p-6">
-        {/* ✅ Chart box */}
         <div className="rounded-2xl border border-base-200 bg-gradient-to-b from-white to-indigo-50/40 p-4">
-          {/* ✅ Route buttons inside chart header */}
           <div className="mb-3">
             <RouteFilter active={active} onChange={setActive} />
           </div>
