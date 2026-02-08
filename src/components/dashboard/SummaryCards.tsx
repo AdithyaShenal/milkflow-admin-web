@@ -53,7 +53,6 @@ function SummaryCard({
         transition-all duration-300 ease-out
         hover:-translate-y-1 hover:shadow-lg`}
     >
-      {/* Badge */}
       <div
         className={`absolute top-3 right-3 rounded-full px-2 py-0.5 text-[10px] font-semibold ${t.badge}`}
       >
